@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo CRUD Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* styles.css */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input, button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: #fff;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+        }
+        .actions button {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Todo CRUD Management</h1>
+        
+        <form id="todo-form">
+            <input type="text" id="todo-name" placeholder="Task Name" required>
+            <button type="submit">Add Task</button>
+        </form>
+        
+        <ul id="todo-list"></ul>
+    </div>
+
+    <script>
+        // script.js
+        let todos = [];
+        const form = document.getElementById("todo-form");
+        const todoList = document.getElementById("todo-list");
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const name = document.getElementById("todo-name").value;
+            addTodo(name);
+            form.reset();
+        });
+
+        function addTodo(name) {
+            const id = Date.now();
+            todos.push({ id, name });
+            renderTodos();
+        }
+
+        function renderTodos() {
+            todoList.innerHTML = "";
+            todos.forEach(todo => {
+                const li = document.createElement("li");
+                li.innerHTML = `
+                    <div>
+                        <strong>${todo.name}</strong>
+                    </div>
+                    <div class="actions">
+                        <button onclick="editTodo(${todo.id})">Edit</button>
+                        <button onclick="deleteTodo(${todo.id})">Delete</button>
+                    </div>
+                `;
+                todoList.appendChild(li);
+            });
+        }
+
+        function editTodo(id) {
+            const todo = todos.find(t => t.id === id);
+            const newName = prompt("Edit task name:", todo.name);
+            if (newName !== null) {
+                todo.name = newName;
+                renderTodos();
+            }
+        }
+
+        function deleteTodo(id) {
+            todos = todos.filter(todo => todo.id !== id);
+            renderTodos();
+        }
+    </script>
+</body>
+</html>
